@@ -1,10 +1,26 @@
+import NotesClient from "@/components/NotesClient";
+import dbConnect from "@/lib/db";
+import Note from "@/models/Note";
 import Image from "next/image";
 
-export default function Home() {
+async function getNotes() {
+    await dbConnect();
+  const notes = await Note.find({}).sort({createdAt:-1}).lean()
+
+  return notes.map((note)=>({
+    ...note,
+    _id:note._id.toString()
+  }))
+}
+export default async function Home() {
+
+  const notes = await getNotes()
+
+  console.log(notes)
   return (
-    <>
-      <h1 className="text-5xl text-amber-600 ">Abhisek Praharaj</h1>
-    </>
-    
+   <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Notes App</h1>
+      <NotesClient initialNotes={notes}/>
+   </div>
   );
 }
