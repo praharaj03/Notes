@@ -4,7 +4,7 @@ import Note from "@/models/Note";
 import Image from "next/image";
 
 async function getNotes() {
-    await dbConnect();
+  await dbConnect();
   const notes = await Note.find({}).sort({createdAt:-1}).lean()
 
   return notes.map((note)=>({
